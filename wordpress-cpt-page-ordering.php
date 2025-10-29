@@ -27,7 +27,6 @@ if (!defined('ABSPATH')) {
 
 /**
  * Plugin constants for paths and URLs.
- * Used throughout the plugin for consistent file/asset loading.
  */
 const VERSION = '0.1.0-alpha.2';
 const FILE    = __FILE__;
@@ -35,7 +34,6 @@ const DIR     = __DIR__;
 
 /**
  * Get plugin basename.
- * Can't use const because plugin_basename() is a function call.
  */
 function get_basename(): string
 {
@@ -44,7 +42,6 @@ function get_basename(): string
 
 /**
  * Get plugin URL.
- * Can't use const because plugins_url() is a function call.
  */
 function get_url(): string
 {

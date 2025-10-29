@@ -142,12 +142,15 @@ class Settings
     /**
      * Sanitize settings before saving.
      *
-     * @param array $input Raw input from form.
+     * @param array|null $input Raw input from form (null when no checkboxes selected).
      * @return array Sanitized options.
      */
-    public function sanitizeOptions(array $input): array
+    public function sanitizeOptions(?array $input): array
     {
         $sanitized = [];
+        if ($input === null) {
+            $input = [];
+        }
 
         // Sanitize enabled_post_types array
         if (isset($input['enabled_post_types']) && \is_array($input['enabled_post_types'])) {
