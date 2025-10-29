@@ -1,0 +1,27 @@
+# Composer dependencies
+/vendor/
+
+# composer.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+
+node_modules/
+
+
+# Build artifacts
+/assets/dist/
+*.min.js
+*.min.css
+*.map
+
+
+# OS files
+Thumbs.db
+*.swp
+*.swo
+*~

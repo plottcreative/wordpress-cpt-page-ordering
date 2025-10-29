@@ -1,0 +1,17 @@
+{
+    "name": "ewanlockwood/wordpress-cpt-page-ordering",
+    "description": "WordPress plugin that allows administrators to easily reorder posts, pages, and custom post types (CPTs) through a simple drag-and-drop interface in the WordPress admin area.",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Ewan Lockwood",
+            "email": "ewan@plott.co.uk"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "PlottOs\\": "src/"
+        }
+    }
+}
