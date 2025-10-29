@@ -33,16 +33,12 @@ const FILE    = __FILE__;
 const DIR     = __DIR__;
 
 /**
- * Load Composer autoloader for PSR-4 class loading.
+ * Load Composer autoloader.
+ * This loads PSR-4 classes and helper functions automatically.
  */
 if (is_readable(DIR . '/vendor/autoload.php')) {
     require_once DIR . '/vendor/autoload.php';
 }
-
-/**
- * Load helper functions (get_basename, get_url, get_assets_url).
- */
-require_once DIR . '/src/helpers.php';
 
 /**
  * Register activation and deactivation hooks.
