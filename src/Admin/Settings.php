@@ -58,7 +58,7 @@ class Settings
         // Add settings section
         \add_settings_section(
             'wp_cpt_ordering_main',                    // Section ID
-            'Post Type Ordering Settings',              // Section title
+            'Settings',              // Section title
             [$this, 'renderSectionDescription'],        // Callback
             $this->page_slug                            // Page slug
         );
