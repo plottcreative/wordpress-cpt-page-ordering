@@ -7,7 +7,7 @@ namespace PlottOs;
 /**
  * Plugin Name:       WP CPT Ordering
  * Description:       Drag-and-drop reordering for posts, pages, and custom post types with persistent storage.
- * Version:           0.1.0
+ * Version:           0.1.0-alpha.2
  * Plugin URI:        https://github.com/ewanlockwood/wordpress-cpt-page-ordering
  * Author:            Ewan Lockwood
  * Author URI:        https://plott.co.uk
@@ -29,21 +29,19 @@ if (!defined('ABSPATH')) {
  * Plugin constants for paths and URLs.
  * Used throughout the plugin for consistent file/asset loading.
  */
-
-const VERSION   = '0.1.0';
+const VERSION   = '0.1.0-alpha.2';
 const FILE      = __FILE__;
 const DIR       = __DIR__;
-$BASENAME      = \plugin_basename(FILE);
-$URL       = \plugins_url('', FILE);
-$ASSETS    = $URL . '/assets';
+const BASENAME  = \plugin_basename(FILE);
+const URL       = \plugins_url('', FILE);
+const ASSETS    = URL . '/assets';
 
 /**
  * Composer autoloader.
  * Enables PSR-4 class autoloading if dependencies are installed.
  */
-$autoload = DIR . '/vendor/autoload.php';
-if (is_readable($autoload)) {
-    require_once $autoload;
+if (is_readable(DIR . '/vendor/autoload.php')) {
+    require_once DIR . '/vendor/autoload.php';
 }
 
 /**
@@ -56,7 +54,7 @@ function activate(): void
 {
     // Verify minimum PHP version requirement.
     if (version_compare(PHP_VERSION, '8.0', '<')) {
-        \deactivate_plugins($BASENAME);
+        \deactivate_plugins(BASENAME);
         \wp_die(
             \esc_html__('WP CPT Ordering requires PHP 8.0 or higher.', 'wp-cpt-ordering'),
             \esc_html__('Plugin Activation Error', 'wp-cpt-ordering'),
@@ -67,7 +65,7 @@ function activate(): void
     // Verify minimum WordPress version requirement.
     global $wp_version;
     if (version_compare($wp_version, '6.0', '<')) {
-        \deactivate_plugins($BASENAME);
+        \deactivate_plugins(BASENAME);
         \wp_die(
             \esc_html__('WP CPT Ordering requires WordPress 6.0 or higher.', 'wp-cpt-ordering'),
             \esc_html__('Plugin Activation Error', 'wp-cpt-ordering'),
@@ -75,7 +73,7 @@ function activate(): void
         );
     }
 
-    // initialise plugin options with sensible defaults.
+    // Initialise plugin options with sensible defaults.
     $defaults = [
         'enabled_post_types' => ['post', 'page'],  // Default to core post types.
         'capability'         => 'edit_others_posts', // Editors and above can reorder.
@@ -84,9 +82,6 @@ function activate(): void
 
     // Only add if doesn't exist (won't overwrite on re-activation).
     \add_option('wp_cpt_ordering_options', $defaults, '', false);
-
-    // Flush rewrite rules to ensure clean URL structure.
-    \flush_rewrite_rules();
 }
 
 \register_activation_hook(FILE, __NAMESPACE__ . '\\activate');
@@ -100,18 +95,16 @@ function activate(): void
  */
 function deactivate(): void
 {
-    // Flush rewrite rules on deactivation.
-    \flush_rewrite_rules();
-
     // Note: We don't delete options or custom order data.
     // This allows users to safely deactivate/reactivate without data loss.
+    // If you add custom rewrite rules later, flush them here.
 }
 
 \register_deactivation_hook(FILE, __NAMESPACE__ . '\\deactivate');
 
 /**
  * Bootstrap plugin functionality.
- * Loads after all plugins are initialised to ensure WordPress core is ready.
+ * Loads after all plugins are Initialised to ensure WordPress core is ready.
  */
 \add_action('plugins_loaded', static function (): void {
     // Load admin functionality only in admin context.
