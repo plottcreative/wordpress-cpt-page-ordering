@@ -29,12 +29,35 @@ if (!defined('ABSPATH')) {
  * Plugin constants for paths and URLs.
  * Used throughout the plugin for consistent file/asset loading.
  */
-const VERSION   = '0.1.0-alpha.2';
-const FILE      = __FILE__;
-const DIR       = __DIR__;
-const BASENAME  = \plugin_basename(FILE);
-const URL       = \plugins_url('', FILE);
-const ASSETS    = URL . '/assets';
+const VERSION = '0.1.0-alpha.2';
+const FILE    = __FILE__;
+const DIR     = __DIR__;
+
+/**
+ * Get plugin basename.
+ * Can't use const because plugin_basename() is a function call.
+ */
+function get_basename(): string
+{
+    return \plugin_basename(FILE);
+}
+
+/**
+ * Get plugin URL.
+ * Can't use const because plugins_url() is a function call.
+ */
+function get_url(): string
+{
+    return \plugins_url('', FILE);
+}
+
+/**
+ * Get assets URL.
+ */
+function get_assets_url(): string
+{
+    return get_url() . '/assets';
+}
 
 /**
  * Composer autoloader.
@@ -54,7 +77,7 @@ function activate(): void
 {
     // Verify minimum PHP version requirement.
     if (version_compare(PHP_VERSION, '8.0', '<')) {
-        \deactivate_plugins(BASENAME);
+        \deactivate_plugins(get_basename());
         \wp_die(
             \esc_html__('WP CPT Ordering requires PHP 8.0 or higher.', 'wp-cpt-ordering'),
             \esc_html__('Plugin Activation Error', 'wp-cpt-ordering'),
@@ -65,7 +88,7 @@ function activate(): void
     // Verify minimum WordPress version requirement.
     global $wp_version;
     if (version_compare($wp_version, '6.0', '<')) {
-        \deactivate_plugins(BASENAME);
+        \deactivate_plugins(get_basename());
         \wp_die(
             \esc_html__('WP CPT Ordering requires WordPress 6.0 or higher.', 'wp-cpt-ordering'),
             \esc_html__('Plugin Activation Error', 'wp-cpt-ordering'),
