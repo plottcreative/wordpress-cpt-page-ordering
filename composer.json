@@ -1,5 +1,6 @@
 {
     "name": "ewanlockwood/wordpress-cpt-page-ordering",
+    "version": "0.1.0-alpha.1",
     "description": "WordPress plugin that allows administrators to easily reorder posts, pages, and custom post types (CPTs) through a simple drag-and-drop interface in the WordPress admin area.",
     "type": "wordpress-plugin",
     "authors": [
