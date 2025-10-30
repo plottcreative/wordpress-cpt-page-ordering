@@ -1,0 +1,138 @@
+/**
+ * Drag-and-drop interface styles.
+ *
+ * @package PlottOs
+ */
+
+/* Sortable list container */
+.wp-cpt-ordering-list {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+    max-width: 800px;
+}
+
+/* Individual sortable item */
+.sortable-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    cursor: move;
+    transition: all 0.2s ease;
+}
+
+.sortable-item:hover {
+    background: #f6f7f7;
+    border-color: #2271b1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Drag handle icon */
+.sortable-item .dashicons-menu {
+    color: #8c8f94;
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+.sortable-item .dashicons-menu:active {
+    cursor: grabbing;
+}
+
+/* Post title */
+.sortable-item .post-title {
+    flex: 1;
+    font-weight: 500;
+    color: #1d2327;
+}
+
+/* Post status badge */
+.sortable-item .post-status {
+    padding: 2px 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    background: #f0f0f1;
+    color: #50575e;
+}
+
+/* Status-specific colors */
+.sortable-item .post-status:is([data-status="publish"], :contains("publish")) {
+    background: #00a32a;
+    color: #fff;
+}
+
+.sortable-item .post-status:is([data-status="draft"], :contains("draft")) {
+    background: #dba617;
+    color: #fff;
+}
+
+/* Ghost element (placeholder when dragging) */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #f0f6fc;
+    border: 2px dashed #2271b1;
+}
+
+/* Chosen element (item being dragged) */
+.sortable-chosen {
+    cursor: grabbing !important;
+}
+
+.sortable-chosen .dashicons-menu {
+    cursor: grabbing !important;
+}
+
+/* Drag element (while dragging) */
+.sortable-drag {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: rotate(3deg);
+    opacity: 0.9;
+}
+
+/* Feedback message container */
+#reorder-feedback {
+    margin: 16px 0;
+    max-width: 800px;
+}
+
+#reorder-feedback p {
+    margin: 0.5em 0;
+}
+
+/* Loading state */
+.wp-cpt-ordering-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Empty state */
+.wp-cpt-ordering-list:empty::after {
+    content: "No items to display.";
+    display: block;
+    padding: 20px;
+    text-align: center;
+    color: #8c8f94;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+    .sortable-item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .sortable-item .post-title {
+        font-size: 14px;
+    }
+
+    .sortable-item .post-status {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}

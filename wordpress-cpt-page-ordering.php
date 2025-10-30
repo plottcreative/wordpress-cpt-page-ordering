@@ -7,7 +7,7 @@ namespace PlottOs;
 /**
  * Plugin Name:       WP CPT Ordering
  * Description:       Drag-and-drop reordering for posts, pages, and custom post types with persistent storage.
- * Version:           0.1.0-alpha.2
+ * Version:           0.1.0-alpha.3
  * Plugin URI:        https://github.com/ewanlockwood/wordpress-cpt-page-ordering
  * Author:            Ewan Lockwood
  * Author URI:        https://plott.co.uk
