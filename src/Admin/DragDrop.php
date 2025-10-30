@@ -96,6 +96,18 @@ class DragDrop
             return $views;
         }
         
+        // Get current post type
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $post_type = $_GET['post_type'] ?? 'post';
+        
+        // Check if this post type has ordering enabled
+        $options = (array) \get_option($this->option_name, []);
+        $enabled_post_types = $options['enabled_post_types'] ?? [];
+        
+        if (!\in_array($post_type, $enabled_post_types, true)) {
+            return $views;
+        }
+        
         echo '<div id="reorder-feedback" style="display: none;"></div>';
         echo '<p class="description" style="margin-bottom: 10px;">';
         \esc_html_e('Drag and drop rows to reorder. Changes are saved automatically.', 'wp-cpt-ordering');
