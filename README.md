@@ -1,4 +1,4 @@
-![Header](docs/header.pnh)
+![Header](docs/header.png)
 
 Drag-and-drop reordering for WordPress posts, pages, and custom post types with persistent storage.
 
