@@ -57,10 +57,10 @@ class Settings
 
         // Add settings section
         \add_settings_section(
-            'wp_cpt_ordering_main',                    // Section ID
-            'Settings',              // Section title
-            [$this, 'renderSectionDescription'],        // Callback
-            $this->page_slug                            // Page slug
+            'wp_cpt_ordering_main',                 // Section ID
+            'Settings',                             // Section title
+            [$this, 'renderSectionDescription'],    // Callback
+            $this->page_slug                        // Page slug
         );
 
         // Add field for post type selection
@@ -122,7 +122,6 @@ class Settings
 
         // Output checkboxes for each post type
         foreach ($post_types as $post_type) {
-            // Skip attachments (media)
             if ($post_type->name === 'attachment') {
                 continue;
             }

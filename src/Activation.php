@@ -43,7 +43,7 @@ class Activation
             );
         }
 
-        // Initialise plugin options with sensible defaults.
+
         $defaults = [
             'enabled_post_types' => ['post', 'page'],      // Default to core post types.
             'capability'         => 'edit_others_posts',   // Editors and above can reorder.
@@ -56,7 +56,6 @@ class Activation
 
     /**
      * Plugin deactivation callback.
-     * Intentionally minimal - preserves user data and settings.
      *
      * @return void
      */
