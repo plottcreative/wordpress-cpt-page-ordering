@@ -37,10 +37,9 @@ class QueryModifier
             return;
         }
 
-        // Only modify main query
-        if (!$query->is_main_query()) {
-            return;
-        }
+        // Note: We intentionally do NOT check is_main_query()
+        // This allows the plugin to work with custom WP_Query in blocks/templates
+        // Developer can still override by setting explicit orderby
 
         // Get plugin settings
         $options = (array) \get_option($this->option_name, []);
