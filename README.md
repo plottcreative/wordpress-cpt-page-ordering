@@ -284,7 +284,6 @@ Contributions are welcome! Please:
 ## Support
 
 - **Issues:** [GitHub Issues](https://github.com/ewanlockwood/wordpress-cpt-page-ordering/issues)
-- **Documentation:** [Technical Brief](TECHNICAL-BRIEF.md)
 - **Email:** ewan@plott.co.uk
 
 ---
