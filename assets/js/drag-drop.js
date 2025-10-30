@@ -1,6 +1,6 @@
 /**
  * Drag-and-drop reordering functionality.
- * Uses SortableJS to handle drag-drop and saves order via AJAX.
+ * Uses SortableJS to handle drag-drop on WordPress post list tables.
  *
  * @package PlottOs
  */
@@ -12,23 +12,23 @@
      * Initialize drag-and-drop functionality.
      */
     $(document).ready(function () {
-        const $sortableList = $('#sortable-posts');
+        const $postsTable = $('#the-list');
 
-        // Exit if no sortable list found
-        if (!$sortableList.length) {
+        // Exit if no posts table found
+        if (!$postsTable.length) {
             return;
         }
 
-        const postType = $sortableList.data('post-type');
+        const postType = wpCptOrdering.postType;
         const $feedback = $('#reorder-feedback');
 
-        // Initialize SortableJS
-        const sortable = new Sortable($sortableList[0], {
+        // Initialize SortableJS on the table tbody
+        const sortable = new Sortable($postsTable[0], {
             animation: 150,
-            handle: '.dashicons-menu',
-            ghostClass: 'sortable-ghost',
-            chosenClass: 'sortable-chosen',
-            dragClass: 'sortable-drag',
+            handle: 'tr',  // Entire row is draggable
+            ghostClass: 'wp-cpt-ordering-ghost',
+            chosenClass: 'wp-cpt-ordering-chosen',
+            dragClass: 'wp-cpt-ordering-drag',
             onEnd: function (evt) {
                 saveOrder();
             }
@@ -38,10 +38,13 @@
          * Save post order via AJAX.
          */
         function saveOrder() {
-            // Get current order of post IDs
+            // Get current order of post IDs from table rows
             const order = [];
-            $sortableList.find('.sortable-item').each(function () {
-                order.push($(this).data('id'));
+            $postsTable.find('tr').each(function () {
+                const postId = $(this).attr('id');
+                if (postId && postId.startsWith('post-')) {
+                    order.push(postId.replace('post-', ''));
+                }
             });
 
             // Show loading feedback
