@@ -34,7 +34,7 @@ Drag-and-drop reordering for WordPress posts, pages, and custom post types with 
 ### Via Composer (Recommended)
 
 ```bash
-composer require ewanlockwood/wordpress-cpt-page-ordering
+composer require plottcreative/wordpress-cpt-page-ordering
 ```
 
 ### Via Git Clone
