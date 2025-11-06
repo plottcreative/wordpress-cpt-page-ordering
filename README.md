@@ -283,7 +283,7 @@ Contributions are welcome! Please:
 
 ## Support
 
-- **Issues:** [GitHub Issues](https://github.com/ewanlockwood/wordpress-cpt-page-ordering/issues)
+- **Issues:** [GitHub Issues](https://github.com/plottcreative/wordpress-cpt-page-ordering/issues)
 - **Email:** ewan@plott.co.uk
 
 ---
@@ -298,7 +298,7 @@ GPL v2 or later. See [LICENSE](LICENSE) for details.
 
 **Author:** Ewan Lockwood  
 **Website:** https://plott.co.uk  
-**Repository:** https://github.com/ewanlockwood/wordpress-cpt-page-ordering
+**Repository:** https://github.com/plottcreative/wordpress-cpt-page-ordering
 
 **Built with:**
 - [SortableJS](https://sortablejs.github.io/Sortable/) - Drag-and-drop library
