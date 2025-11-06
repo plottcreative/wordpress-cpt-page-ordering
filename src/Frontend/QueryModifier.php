@@ -96,6 +96,11 @@ class QueryModifier
             return;
         }
 
+        // This is for developer to disable ordering for specific conditions
+        if (false === apply_filters('wp_cpt_ordering_apply', true, $query)) {
+            return;
+        }
+
         // Apply menu_order sorting
         $query->set('orderby', 'menu_order');
         $query->set('order', 'ASC');
