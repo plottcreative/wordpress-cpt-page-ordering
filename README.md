@@ -239,7 +239,18 @@ add_filter('option_wp_cpt_ordering_options', function($options) {
     $options['orderby_default'] = false;
     return $options;
 });
-```
+
+// Force menu_order on FAQ (example) archives, even if a theme sets orderby=title
+add_filter('plottos_force_menu_order', function ($force, $q) {
+    return is_post_type_archive('faq');
+}, 10, 2);
+
+// Disable ordering on search results
+add_filter('plottos_ordering_apply', function ($apply, $q) {
+    return !$q->is_search();
+}, 10, 2);
+
+``
 
 ### Constants
 

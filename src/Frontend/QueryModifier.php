@@ -92,12 +92,19 @@ class QueryModifier
 
         // Only apply if developer hasn't explicitly set orderby
         // This respects manual ordering in custom queries
-        if (!empty($query->get('orderby'))) {
+       // This respects manual ordering in custom queries
+        $explicit_orderby = $query->get('orderby');
+
+        // Allow developers to disable ordering for specific contexts
+        if (false === apply_filters('plottos_ordering_apply', true, $query)) {
             return;
         }
 
-        // This is for developer to disable ordering for specific conditions
-        if (false === apply_filters('wp_cpt_ordering_apply', true, $query)) {
+        // Allow developers to force menu_order even if an explicit orderby exists
+        $force_menu_order = apply_filters('plottos_force_menu_order', false, $query);
+
+        // Respect explicit orderby if not forcing
+        if (!empty($explicit_orderby) && !$force_menu_order) {
             return;
         }
 
