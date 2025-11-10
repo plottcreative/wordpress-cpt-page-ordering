@@ -1,6 +1,14 @@
-// admin-src/settings/main.js
 import { createApp, ref, computed, onMounted } from 'vue';
 import './main.css';
+
+// Optional dev logging for apiFetch
+window.wp?.apiFetch?.use((args, next) => {
+  console.log('[apiFetch] →', args);
+  return next(args).then((res) => {
+    console.log('[apiFetch] ←', res);
+    return res;
+  });
+});
 
 function apiFetch(path, options = {}) {
   const { restUrl, nonce } = window.PLOTTOS_SETTINGS_BOOT;
@@ -14,11 +22,11 @@ function apiFetch(path, options = {}) {
 
 const App = {
   setup() {
-    const loading = ref(true);
-    const saving  = ref(false);
+    const loading   = ref(true);
+    const saving    = ref(false);
     const postTypes = ref([]);
-    const form = ref({ apply_on_archives: true, apply_on_search: false, enabled_types: [] });
-    const filter = ref('');
+    const form      = ref({ apply_on_archives: true, apply_on_search: false, enabled_types: [] });
+    const filter    = ref('');
 
     const filteredTypes = computed(() =>
       postTypes.value.filter(pt =>
@@ -26,22 +34,17 @@ const App = {
       )
     );
 
-    const el = document.getElementById('plottos-cpt-ordering-settings-root');
-    if (el) {
-      console.log('[PLOTTOS] Mounting Vue settings app');
-      createApp(App).mount(el);
-    }
-
-
     onMounted(async () => {
+      console.log('[PLOTTOS] onMounted fired');
       try {
         const res = await apiFetch('plottos/v1/settings');
+        console.log('[PLOTTOS] GET result:', res);
         postTypes.value = res?.postTypes ?? [];
-        form.value = res?.settings ?? form.value;
+        form.value      = res?.settings ?? form.value;
       } catch (e) {
-        console.error('[PLOTTOS] Settings fetch failed:', e);
+        console.error('[PLOTTOS] GET failed:', e);
       } finally {
-        loading.value = false; // always show UI
+        loading.value = false;
       }
     });
 
@@ -69,6 +72,7 @@ const App = {
 
     return { loading, saving, form, postTypes, filteredTypes, filter, save, toggleType };
   },
+
   template: `
     <div v-if="loading">Loading…</div>
     <div v-else class="plottos-settings">
@@ -101,8 +105,10 @@ const App = {
   `
 };
 
+// ✅ Mount exactly once, outside the component
 (function mount(){
   const el = document.getElementById('plottos-cpt-ordering-settings-root');
+  console.log('[PLOTTOS] mount el found?', !!el);
   if (!el) return;
   createApp(App).mount(el);
 })();
