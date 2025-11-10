@@ -9,7 +9,9 @@ export default defineConfig({
       entry: {
         'admin-settings': path.resolve(process.cwd(), 'admin-src/settings/main.js'),
       },
-      formats: ['es'],
+      // ⬇️ build an immediately-invoked bundle that runs in the page
+      formats: ['iife'],
+      name: 'PlottosSettings',                // required for iife
       fileName: (_format, name) => `${name}.js`,
     },
     outDir: 'assets',
