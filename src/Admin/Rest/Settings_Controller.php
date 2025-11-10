@@ -42,11 +42,13 @@ final class Settings_Controller
 
     public static function get_items(WP_REST_Request $r): WP_REST_Response
     {
-        $opts = (array) \get_option(self::OPTION, [
-            'apply_on_archives' => true,
-            'apply_on_search'   => false,
-            'enabled_types'     => ['page'],
-        ]);
+        $opts = (array) \get_option(self::OPTION, []);
+        $normalized = [
+            'apply_on_archives' => (bool)($opts['apply_on_archives'] ?? true),
+            'apply_on_search'   => (bool)($opts['apply_on_search'] ?? false),
+            // Map your stored key to what Vue expects
+            'enabled_types'     => \array_values((array)($opts['enabled_post_types'] ?? ['page'])),
+        ];
 
         $pts = \get_post_types(['public' => true], 'objects');
         $postTypes = \array_values(\array_map(
@@ -54,22 +56,32 @@ final class Settings_Controller
             $pts
         ));
 
-        return new WP_REST_Response([
-            'settings'  => $opts,
-            'postTypes' => $postTypes,
-        ]);
+        return new WP_REST_Response(['settings' => $normalized, 'postTypes' => $postTypes]);
     }
 
     public static function update_items(WP_REST_Request $r): WP_REST_Response
     {
+        // Write back using your *stored* option schema (enabled_post_types)
+        $enabled = \array_values(\array_filter(\array_map('sanitize_key', (array)$r->get_param('enabled_types'))));
         $payload = [
-            'apply_on_archives' => (bool) $r->get_param('apply_on_archives'),
-            'apply_on_search'   => (bool) $r->get_param('apply_on_search'),
-            'enabled_types'     => \array_values(\array_filter(\array_map('sanitize_key', (array) $r->get_param('enabled_types')))),
+            'apply_on_archives'   => (bool)$r->get_param('apply_on_archives'),
+            'apply_on_search'     => (bool)$r->get_param('apply_on_search'),
+            'enabled_post_types'  => $enabled,
         ];
 
-        \update_option(self::OPTION, $payload);
+        \update_option(self::OPTION, \array_merge(
+            (array)\get_option(self::OPTION, []),
+            $payload
+        ));
 
-        return new WP_REST_Response(['ok' => true, 'settings' => $payload]);
+        // Return Vue’s shape
+        return new WP_REST_Response([
+            'ok' => true,
+            'settings' => [
+                'apply_on_archives' => $payload['apply_on_archives'],
+                'apply_on_search'   => $payload['apply_on_search'],
+                'enabled_types'     => $enabled,
+            ],
+        ]);
     }
 }

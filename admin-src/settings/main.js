@@ -26,11 +26,23 @@ const App = {
       )
     );
 
+    const el = document.getElementById('plottos-cpt-ordering-settings-root');
+    if (el) {
+      console.log('[PLOTTOS] Mounting Vue settings app');
+      createApp(App).mount(el);
+    }
+
+
     onMounted(async () => {
-      const res = await apiFetch('plottos/v1/settings');
-      postTypes.value = res.postTypes;
-      form.value = res.settings;
-      loading.value = false;
+      try {
+        const res = await apiFetch('plottos/v1/settings');
+        postTypes.value = res?.postTypes ?? [];
+        form.value = res?.settings ?? form.value;
+      } catch (e) {
+        console.error('[PLOTTOS] Settings fetch failed:', e);
+      } finally {
+        loading.value = false; // always show UI
+      }
     });
 
     async function save() {
