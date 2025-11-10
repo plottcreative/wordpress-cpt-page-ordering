@@ -4916,6 +4916,6 @@ const kc = {
 };
 (function() {
   const t = document.getElementById("plottos-cpt-ordering-settings-root");
-  console.log("[PLOTTOS] mount el found?", !!t), t && Lc(kc).mount(t);
+  console.log("[PLOTTOS] mount el found?", !!t), t && (console.log("[PLOTTOS] creating app…"), Lc(kc).mount(t));
 })();
 //# sourceMappingURL=admin-settings.js.map
