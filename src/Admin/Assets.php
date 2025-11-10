@@ -1,7 +1,9 @@
+<?php
 // src/Admin/Assets.php
+
 add_action('admin_enqueue_scripts', function ($hook) {
     // Adjust this to your actual page hook. Example:
-    if ($hook !== 'settings_page_plottos-ordering') return;
+    if ($hook !== 'wp-cpt-ordering') return;
 
     $ver = defined('PLOTTOS_VERSION') ? PLOTTOS_VERSION : time();
     $base = plugins_url('', PLOTTOS_PLUGIN_FILE);

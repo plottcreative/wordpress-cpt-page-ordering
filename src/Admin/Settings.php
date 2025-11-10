@@ -29,15 +29,46 @@ class Settings
     /**
      * Add settings page under Settings menu.
      */
-    public function addSettingsPage(): void
-    {
-        \add_options_page(
-            'Post Ordering Settings',           // Page title
-            'Post Ordering',                    // Menu title
-            $this->capability,                  // Capability required
-            $this->page_slug,                   // Menu slug
-            [$this, 'renderSettingsPage']       // Callback function
+    public function addSettingsPage(): void {
+        $hook = add_options_page(
+            __('Post Ordering', 'plottos'),
+            __('Post Ordering', 'plottos'),
+            $this->capability,
+            $this->page_slug, // 'wp-cpt-ordering'
+            [$this, 'renderSettingsPage']
         );
+
+        // Only when our page loads:
+        add_action('load-' . $hook, function () {
+            add_action('admin_enqueue_scripts', [$this, 'enqueueVueAssets']);
+        });
+    }
+
+    public function enqueueVueAssets(): void {
+        $base = plugins_url('', \PlottOs\FILE);
+        $ver  = defined('PLOTTOS_VERSION') ? PLOTTOS_VERSION : time();
+
+        wp_enqueue_style('plottos-admin-settings', $base . '/assets/style.css', [], $ver);
+
+        wp_register_script(
+            'plottos-admin-settings',
+            $base . '/assets/admin-settings.js',
+            ['wp-api-fetch','wp-i18n'],
+            $ver,
+            true
+        );
+
+        wp_add_inline_script(
+            'plottos-admin-settings',
+            'window.PLOTTOS_SETTINGS_BOOT=' . wp_json_encode([
+                'restUrl' => esc_url_raw(rest_url('plottos/v1')),
+                'nonce'   => wp_create_nonce('wp_rest'),
+                'i18n'    => ['saved'=>__('Settings saved','plottos'),'error'=>__('Save failed','plottos')],
+            ]) . ';',
+            'before'
+        );
+
+        wp_enqueue_script('plottos-admin-settings');
     }
 
     /**
@@ -78,27 +109,25 @@ class Settings
      */
     public function renderSettingsPage(): void
     {
-        // Check user capability
         if (!\current_user_can($this->capability)) {
             \wp_die(\esc_html__('You do not have sufficient permissions to access this page.', 'wp-cpt-ordering'));
-        }
-
-        ?>
+        } ?>
         <div class="wrap">
             <h1><?php echo \esc_html(\get_admin_page_title()); ?></h1>
-            <form action="options.php" method="post">
-                <?php
-                // Output nonce, action, and option_page fields
-                \settings_fields($this->option_group);
-                // Output settings sections and fields
-                \do_settings_sections($this->page_slug);
-                // Output save button
-                \submit_button('Save Settings');
-                ?>
-            </form>
+
+            <div id="plottos-cpt-ordering-settings-root">
+                <form action="options.php" method="post" class="plottos-settings-fallback">
+                    <?php
+                    \settings_fields($this->option_group);
+                    \do_settings_sections($this->page_slug);
+                    \submit_button('Save Settings');
+                    ?>
+                </form>
+            </div>
         </div>
         <?php
     }
+
 
     /**
      * Render section description.

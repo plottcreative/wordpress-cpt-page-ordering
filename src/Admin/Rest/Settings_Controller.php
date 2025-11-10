@@ -1,65 +1,75 @@
 <?php
+declare(strict_types=1);
+
 namespace PlottOs\Admin\Rest;
 
-use WP_Rest_Request;
-use WP_Rest_Response;
+use WP_REST_Request;
+use WP_REST_Response;
 
-class SettingController {
-    const NAMESPACE = 'plottos/v1';
-    const ROUTE = '/settings';
+final class Settings_Controller
+{
+    private const NS = 'plottos/v1';
+    private const ROUTE = '/settings';
+    private const OPTION = 'wp_cpt_ordering_options';
 
-    public static function register() {
-        add_action('rest_api_init', function() {
-            register_rest_route(self::NAMESPACE, self::ROUTE, [
+    public static function register(): void
+    {
+        \add_action('rest_api_init', function () {
+            \register_rest_route(self::NS, self::ROUTE, [
                 [
-                    'methods'               => 'GET',
-                    'callback'              => [self::class, 'getItems'],
-                    'permission_callback'   => [self::class, 'canManage'],
+                    'methods'             => 'GET',
+                    'callback'            => [self::class, 'get_items'],
+                    'permission_callback' => [self::class, 'can_manage'],
                 ],
                 [
-                    'methods'               => 'PUT',
-                    'callback'              => [self::class, 'updateItems'],
-                    'permission_callback'   => [self::class, 'canManage'],
-                    'args'                  => [
-                        'apply_on_archives' => [ 'type' => 'boolean'],
-                        'apply_on_search'   => [ 'type' => 'boolean'],
-                        'enabled_types' => [ 'type' => 'array', 'items' => ['type' => 'string']],
-                    ]
-                ]
+                    'methods'             => 'PUT',
+                    'callback'            => [self::class, 'update_items'],
+                    'permission_callback' => [self::class, 'can_manage'],
+                    'args'                => [
+                        'apply_on_archives' => ['type' => 'boolean'],
+                        'apply_on_search'   => ['type' => 'boolean'],
+                        'enabled_types'     => ['type' => 'array', 'items' => ['type' => 'string']],
+                    ],
+                ],
             ]);
         });
     }
 
-    public static function canManage() {
-        return current_user_can('manage_options');
+    public static function can_manage(): bool
+    {
+        return \current_user_can('manage_options');
     }
 
-    public static function getItems(WP_REST_Request $req) : WP_REST_Response {
-        $opts = get_option('plottos_ordering', [
+    public static function get_items(WP_REST_Request $r): WP_REST_Response
+    {
+        $opts = (array) \get_option(self::OPTION, [
             'apply_on_archives' => true,
             'apply_on_search'   => false,
             'enabled_types'     => ['page'],
         ]);
 
-        $all_types = get_post_types(['public' => true], 'objects');
+        $pts = \get_post_types(['public' => true], 'objects');
+        $postTypes = \array_values(\array_map(
+            fn($o) => ['slug' => $o->name, 'label' => $o->labels->singular_name ?? $o->label],
+            $pts
+        ));
 
         return new WP_REST_Response([
-            'settings' => $opts,
-            'postTypes' => array_values( array_map(fn($o) => [
-                'slug'  => $o->name,
-                'label' => $o->label->singular_name ?? $o->label,
-            ], $all_types)),
+            'settings'  => $opts,
+            'postTypes' => $postTypes,
         ]);
     }
 
-    public static function updateItems(WP_REST_Request $req) : WP_REST_Response {
+    public static function update_items(WP_REST_Request $r): WP_REST_Response
+    {
         $payload = [
-            'apply_on_archives' => (bool) $req->get_param('apply_on_archives'),
-            'apply_on_search'   => (bool) $req->get_param('apply_on_search'),
-            'enabled_types'     => array_values( array_filter( array_map('sanitize_key', (array) $req->get_param('enabled_types')))),
+            'apply_on_archives' => (bool) $r->get_param('apply_on_archives'),
+            'apply_on_search'   => (bool) $r->get_param('apply_on_search'),
+            'enabled_types'     => \array_values(\array_filter(\array_map('sanitize_key', (array) $r->get_param('enabled_types')))),
         ];
-        update_option('plottos_ordering', $payload);
-        
+
+        \update_option(self::OPTION, $payload);
+
         return new WP_REST_Response(['ok' => true, 'settings' => $payload]);
     }
 }

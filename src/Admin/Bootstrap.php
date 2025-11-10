@@ -38,6 +38,11 @@ class Bootstrap
             $settings->init();
         }
 
+        if (class_exists(\PlottOs\Admin\Rest\Settings_Controller::class)) {
+            \PlottOs\Admin\Rest\Settings_Controller::register();
+        }
+
+
         // Load drag-drop interface (under Tools > Reorder Posts).
         if (\class_exists('\\PlottOs\\Admin\\DragDrop')) {
             $drag_drop = new DragDrop($capability);
