@@ -4,12 +4,15 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [vue()],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+    'process.env': {},
+  },
   build: {
     lib: {
-      entry: {
-        'admin-settings': path.resolve(process.cwd(), 'admin-src/settings/main.js'),
-      },
-      formats: ['es'],
+      entry: { 'admin-settings': path.resolve(process.cwd(), 'admin-src/settings/main.js') },
+      formats: ['iife'],
+      name: 'PlottosSettings',
       fileName: (_format, name) => `${name}.js`,
     },
     outDir: 'assets',
