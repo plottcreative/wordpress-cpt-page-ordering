@@ -105,10 +105,11 @@ const App = {
   `
 };
 
-// ✅ Mount exactly once, outside the component
-(function mount(){
+(function mount() {
   const el = document.getElementById('plottos-cpt-ordering-settings-root');
-  console.log('[PLOTTOS] mount el found?', !!el);
+  console.log('[PLOTTOS] mount el found?', !!el); // ✅ add this line
   if (!el) return;
+  console.log('[PLOTTOS] creating app…'); // ✅ add this line too
   createApp(App).mount(el);
 })();
+
