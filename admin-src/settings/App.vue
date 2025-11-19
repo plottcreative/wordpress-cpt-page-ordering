@@ -35,34 +35,26 @@ onMounted(async () => {
   } 
 });
 
-// Helper function to show notifications with fallback
-function showNotice(message, type = 'success') {
-  console.log(`[PLOTTOS] Showing ${type} notification:`, message);
-  
+function showNotice(message, type = 'success') {  
   if (window.wp?.toast) {
-    console.log('[PLOTTOS] WordPress toast API detected');
     const toastFn = window.wp.toast[type];
     if (typeof toastFn === 'function') {
-      console.log(`[PLOTTOS] Using native WordPress toast.${type}()`);
+      console.log(`[WP-CPT-ORDERING] Using native WordPress toast.${type}()`);
       toastFn(message);
       return;
     }
-    console.log(`[PLOTTOS] wp.toast.${type} is not a function, using fallback`);
+    console.log(`[WP-CPT-ORDERING] wp.toast.${type} is not a function, using fallback`);
   } else {
     console.log('[PLOTTOS] WordPress toast API not available, using custom fallback');
   }
   
-  // Fallback: Create custom toast
-  console.log('[PLOTTOS] Creating custom toast notification');
   createCustomToast(message, type);
 }
 
 function createCustomToast(message, type) {
-  // Remove any existing toasts
   const existing = document.querySelector('.wp-cpt-ordering-toast');
   if (existing) existing.remove();
   
-  // Create toast element
   const toast = document.createElement('div');
   toast.className = `wp-cpt-ordering-toast wp-cpt-ordering-toast-${type}`;
   toast.innerHTML = `
@@ -70,10 +62,9 @@ function createCustomToast(message, type) {
     <span class="wp-cpt-ordering-toast-message">${message}</span>
   `;
   
-  // Style the toast
   Object.assign(toast.style, {
     position: 'fixed',
-    top: '32px',
+    top: '42px',
     right: '20px',
     padding: '12px 16px',
     borderRadius: '4px',
@@ -85,11 +76,10 @@ function createCustomToast(message, type) {
     alignItems: 'center',
     gap: '8px',
     fontSize: '14px',
-    animation: 'wp-cpt-ordering-slide-in 0.3s ease-out',
+    animation: 'wp-cpt-ordering-slide-in 0.3s ease-out forwards',
     maxWidth: '400px'
   });
   
-  // Add animation keyframes if not already present
   if (!document.querySelector('#wp-cpt-ordering-toast-style')) {
     const style = document.createElement('style');
     style.id = 'wp-cpt-ordering-toast-style';
@@ -106,12 +96,10 @@ function createCustomToast(message, type) {
     document.head.appendChild(style);
   }
   
-  // Add to page
   document.body.appendChild(toast);
   
-  // Auto-remove after 3 seconds
   setTimeout(() => {
-    toast.style.animation = 'wp-cpt-ordering-slide-out 0.3s ease-in';
+    toast.style.animation = 'wp-cpt-ordering-slide-out 0.3s ease-in forwards';
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
@@ -171,7 +159,7 @@ function toggleType(slug) {
       </div>
     </div>
 
-    <button class="button button-primary" :disabled="saving" @click="save">
+    <button class="button" :disabled="saving" @click="save">
       {{ saving ? 'Saving…' : 'Save settings' }}
     </button>
   </div>

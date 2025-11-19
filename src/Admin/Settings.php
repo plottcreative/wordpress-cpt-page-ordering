@@ -113,7 +113,11 @@ class Settings
             \wp_die(\esc_html__('You do not have sufficient permissions to access this page.', 'wp-cpt-ordering'));
         } ?>
         <div class="wrap">
-            <h1><?php echo \esc_html(\get_admin_page_title()); ?></h1>
+            <div class="wp-cpt-heading-container">
+                <h1 class="wp-cpt-heading"><?php echo \esc_html(\get_admin_page_title()); ?></h1>
+                <p class="wp-cpt-bultby"><?php echo \esc_html__('built by', 'wp-cpt-ordering'); ?> <a href="https://plott.co.uk/" target="_blank">PLOTT</a></p>
+            </div>
+            
 
             <div id="wp-cpt-ordering-settings-root">
                 <form action="options.php" method="post" class="wp-cpt-ordering-settings-fallback">
