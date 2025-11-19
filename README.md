@@ -2,7 +2,7 @@
 
 Drag-and-drop reordering for WordPress posts, pages, and custom post types with persistent storage.
 
-![Version](https://img.shields.io/badge/version-0.3.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![PHP](https://img.shields.io/badge/php-%3E%3D8.0-brightgreen)
 ![WordPress](https://img.shields.io/badge/wordpress-%3E%3D6.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-orange)
@@ -198,86 +198,253 @@ The plugin implements multi-layer security:
 
 ### Architecture
 
+#### Directory Structure
 ```
 wordpress-cpt-page-ordering/
 ├── wordpress-cpt-page-ordering.php  # Plugin entry point
-├── composer.json                     # PSR-4 autoloading
-├── src/
-│   ├── Activation.php                # Activation hooks
+├── composer.json                     # PSR-4 autoloading (WpCptOrdering namespace)
+├── package.json                      # NPM dependencies (Vue, Vite)
+├── vite.config.mjs                   # Vue build configuration
+├── src/                              # PHP source files
+│   ├── Activation.php                # Activation/deactivation hooks
 │   ├── helpers.php                   # Helper functions
 │   ├── Admin/
 │   │   ├── Bootstrap.php             # Admin initialization
-│   │   ├── Settings.php              # Settings page
+│   │   ├── Settings.php              # Settings page (legacy)
+│   │   ├── Assets.php                # Asset loader
 │   │   ├── DragDrop.php              # Drag-drop UI
-│   │   └── Ajax.php                  # AJAX handler
+│   │   ├── Ajax.php                  # AJAX handler for reordering
+│   │   └── Rest/
+│   │       └── Settings_Controller.php  # REST API for Vue settings
 │   └── Frontend/
 │       ├── Bootstrap.php             # Frontend initialization
-│       └── QueryModifier.php         # Query modification
-├── assets/
+│       └── QueryModifier.php         # Query modification (pre_get_posts)
+├── admin-src/                        # Vue source files (development)
+│   └── settings/
+│       ├── App.vue                   # Main Vue component
+│       ├── main.js                   # Vue app entry point
+│       └── main.css                  # Settings page styles
+├── assets/                           # Compiled assets (production)
+│   ├── admin-settings.js             # Built Vue app (69KB)
+│   ├── style.css                     # Built CSS
 │   ├── js/
 │   │   └── drag-drop.js              # SortableJS integration
 │   └── css/
-│       └── drag-drop.css             # UI styles
+│       └── drag-drop.css             # Drag-drop UI styles
 └── vendor/                           # Composer dependencies
 ```
 
-### Hooks & Filters
-
-#### Actions
+#### PHP Namespace Structure
 
 ```php
-// Admin initialization
-add_action('plugins_loaded', function() {
-    if (is_admin()) {
-        Admin\Bootstrap::init();
-    }
-    Frontend\Bootstrap::init();
-});
-
-// AJAX endpoint
-add_action('wp_ajax_wp_cpt_ordering_save', [Ajax::class, 'handleSaveOrder']);
-
-// Query modification
-add_action('pre_get_posts', [QueryModifier::class, 'applyCustomOrder']);
+WpCptOrdering\                        # Root namespace (v0.2.0+)
+├── Activation                         # Activation/deactivation handler
+├── Admin\Bootstrap                    # Admin area initialization
+├── Admin\Settings                     # Settings page class
+├── Admin\DragDrop                     # Drag-drop UI handler
+├── Admin\Ajax                         # AJAX save handler
+├── Admin\Rest\Settings_Controller     # REST API controller
+├── Frontend\Bootstrap                 # Frontend initialization
+└── Frontend\QueryModifier             # Query modification logic
 ```
 
-#### Filters
+**Note:** Prior to v0.2.0, the namespace was `PlottOs`. This was changed for consistency.
 
+### Hooks & Filters
+
+#### WordPress Actions
+
+| Action | Description | Parameters |
+|--------|-------------|------------|
+| `plugins_loaded` | Plugin initialization | None |
+| `admin_init` | Register settings | None |
+| `admin_menu` | Add settings page | None |
+| `admin_enqueue_scripts` | Load admin assets | `$hook` |
+| `wp_ajax_wp_cpt_ordering_save` | Handle reorder AJAX | None |
+| `rest_api_init` | Register REST routes | None |
+| `pre_get_posts` | Modify queries | `WP_Query` |
+
+**Example: Plugin Initialization**
 ```php
-// Disable automatic frontend ordering
+add_action('plugins_loaded', function() {
+    // Plugin bootstraps here
+    if (is_admin()) {
+        WpCptOrdering\Admin\Bootstrap::init();
+    }
+    WpCptOrdering\Frontend\Bootstrap::init();
+});
+```
+
+#### Custom Filters (Plugin-Specific)
+
+##### 1. `wp_cpt_ordering_apply`
+Control whether ordering should apply to a specific query.
+
+**Parameters:**
+- `$apply` (bool) - Whether to apply ordering (default: `true`)
+- `$query` (WP_Query) - The query object
+
+**Returns:** `bool`
+
+**Examples:**
+```php
+// Disable ordering on search results
+add_filter('wp_cpt_ordering_apply', function ($apply, $query) {
+    if ($query->is_search()) {
+        return false;
+    }
+    return $apply;
+}, 10, 2);
+
+// Only apply ordering on main query
+add_filter('wp_cpt_ordering_apply', function ($apply, $query) {
+    return $query->is_main_query();
+}, 10, 2);
+
+// Disable ordering for specific post type
+add_filter('wp_cpt_ordering_apply', function ($apply, $query) {
+    if ($query->get('post_type') === 'product') {
+        return false; // Let WooCommerce handle product ordering
+    }
+    return $apply;
+}, 10, 2);
+```
+
+##### 2. `wp_cpt_ordering_force_menu_order`
+Force menu_order even when a query has explicit `orderby` set.
+
+**Parameters:**
+- `$force` (bool) - Whether to force (default: `false`)
+- `$query` (WP_Query) - The query object
+
+**Returns:** `bool`
+
+**Examples:**
+```php
+// Always use menu_order on FAQ archives
+add_filter('wp_cpt_ordering_force_menu_order', function ($force, $query) {
+    return is_post_type_archive('faq');
+}, 10, 2);
+
+// Force on custom page template
+add_filter('wp_cpt_ordering_force_menu_order', function ($force, $query) {
+    return is_page_template('template-ordered-posts.php');
+}, 10, 2);
+```
+
+##### 3. `option_wp_cpt_ordering_options`
+Modify plugin options programmatically (WordPress core filter).
+
+**Parameters:**
+- `$options` (array) - Plugin options
+
+**Returns:** `array`
+
+**Examples:**
+```php
+// Disable automatic ordering globally
 add_filter('option_wp_cpt_ordering_options', function($options) {
     $options['orderby_default'] = false;
     return $options;
 });
 
-// Force menu_order on FAQ (example) archives, even if a theme sets orderby=title
-add_filter('plottos_force_menu_order', function ($force, $q) {
-    return is_post_type_archive('faq');
-}, 10, 2);
-
-// Disable ordering on search results
-add_filter('plottos_ordering_apply', function ($apply, $q) {
-    return !$q->is_search();
-}, 10, 2);
-
-``
+// Programmatically enable post types
+add_filter('option_wp_cpt_ordering_options', function($options) {
+    $options['enabled_post_types'][] = 'portfolio';
+    return $options;
+});
+```
 
 ### Constants
 
 ```php
-PlottOs\VERSION        // Plugin version
-PlottOs\FILE           // Plugin file path
-PlottOs\DIR            // Plugin directory
-PlottOs\NONCE_ACTION   // Nonce action name
-PlottOs\NONCE_NAME     // Nonce field name
+WpCptOrdering\VERSION        // Plugin version (e.g., '0.2.0')
+WpCptOrdering\FILE           // Plugin file path (__FILE__)
+WpCptOrdering\DIR            // Plugin directory (__DIR__)
+WpCptOrdering\NONCE_ACTION   // Nonce action: 'wp_cpt_ordering_action'
+WpCptOrdering\NONCE_NAME     // Nonce field: 'wp_cpt_ordering_nonce'
+```
+
+**Usage:**
+```php
+// Check version
+if (version_compare(WpCptOrdering\VERSION, '0.2.0', '>=')) {
+    // Use new features
+}
+
+// Get plugin URL
+$plugin_url = plugins_url('', WpCptOrdering\FILE);
 ```
 
 ### Helper Functions
 
 ```php
-PlottOs\get_basename()     // Plugin basename
-PlottOs\get_url()          // Plugin URL
-PlottOs\get_assets_url()   // Assets directory URL
+WpCptOrdering\get_basename()     // Plugin basename (for activation hooks)
+WpCptOrdering\get_url()          // Plugin URL
+WpCptOrdering\get_assets_url()   // Assets directory URL
+```
+
+**Usage:**
+```php
+// Enqueue custom script
+wp_enqueue_script(
+    'my-custom-script',
+    WpCptOrdering\get_assets_url() . '/js/custom.js',
+    [],
+    WpCptOrdering\VERSION
+);
+```
+
+### REST API Endpoints
+
+#### `GET /wp-json/wp-cpt-ordering/v1/settings`
+Get current settings and available post types.
+
+**Response:**
+```json
+{
+  "settings": {
+    "apply_on_archives": true,
+    "apply_on_search": false,
+    "enabled_types": ["post", "page"]
+  },
+  "postTypes": [
+    {"slug": "post", "label": "Post"},
+    {"slug": "page", "label": "Page"}
+  ]
+}
+```
+
+#### `PUT /wp-json/wp-cpt-ordering/v1/settings`
+Update plugin settings.
+
+**Request Body:**
+```json
+{
+  "apply_on_archives": true,
+  "apply_on_search": false,
+  "enabled_types": ["post", "page", "portfolio"]
+}
+```
+
+**Response:**
+```json
+{
+  "ok": true,
+  "settings": {
+    "apply_on_archives": true,
+    "apply_on_search": false,
+    "enabled_types": ["post", "page", "portfolio"]
+  }
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT "https://yoursite.com/wp-json/wp-cpt-ordering/v1/settings" \
+  -H "Content-Type: application/json" \
+  -H "X-WP-Nonce: YOUR_NONCE" \
+  --data '{"enabled_types":["post","page"]}'
 ```
 
 ---
