@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PlottOs;
+namespace WpCptOrdering;
 
 /**
  * Plugin Name:       WP CPT Ordering
  * Description:       Drag-and-drop reordering for posts, pages, and custom post types with persistent storage.
- * Version:           0.1.12
+ * Version:           0.2.0
  * Plugin URI:        https://github.com/plottcreative/wordpress-cpt-page-ordering
  * Author:            Ewan Lockwood
  * Author URI:        https://plott.co.uk
@@ -17,7 +17,7 @@ namespace PlottOs;
  * Requires PHP:      8.0
  * Text Domain:       wp-cpt-ordering
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 // Prevent direct access.
@@ -28,7 +28,7 @@ if (!defined('ABSPATH')) {
 /**
  * Plugin constants.
  */
-const VERSION = '0.1.12';
+const VERSION = '0.2.0';
 const FILE    = __FILE__;
 const DIR     = __DIR__;
 
@@ -53,23 +53,23 @@ if (is_readable(DIR . '/vendor/autoload.php')) {
 add_action('plugins_loaded', static function (): void {
     // Admin UI (menus, enqueue, etc.)
     if (\is_admin()) {
-        \PlottOs\Admin\Bootstrap::init();
+        \WpCptOrdering\Admin\Bootstrap::init();
     }
 
     // Frontend bootstrap (unchanged)
-    \PlottOs\Frontend\Bootstrap::init();
+    \WpCptOrdering\Frontend\Bootstrap::init();
 
     // REST routes must be registered regardless of is_admin()
-    if (class_exists(\PlottOs\Admin\Rest\Settings_Controller::class)) {
-        \PlottOs\Admin\Rest\Settings_Controller::register();
+    if (class_exists(\WpCptOrdering\Admin\Rest\Settings_Controller::class)) {
+        \WpCptOrdering\Admin\Rest\Settings_Controller::register();
     }
 });
 
 add_action('rest_api_init', function () {
     $routes = rest_get_server()->get_routes();
-    error_log( isset($routes['/plottos/v1/settings'])
-      ? '[PLOTTOS] REST route PRESENT'
-      : '[PLOTTOS] REST route MISSING'
+    error_log( isset($routes['/wp-cpt-ordering/v1/settings'])
+      ? '[WP-CPT-ORDERING] REST route PRESENT'
+      : '[WP-CPT-ORDERING] REST route MISSING'
     );
 });
 

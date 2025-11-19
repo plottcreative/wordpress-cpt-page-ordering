@@ -2,12 +2,12 @@
 /**
  * Plugin activation and deactivation handler.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 declare(strict_types=1);
 
-namespace PlottOs;
+namespace WpCptOrdering;
 
 /**
  * Handles plugin activation and deactivation.

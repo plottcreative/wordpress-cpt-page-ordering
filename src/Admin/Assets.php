@@ -13,7 +13,7 @@ add_action('admin_enqueue_scripts', function ($hook) {
 
     // Vite output CSS
     wp_enqueue_style(
-        'plottos-admin-settings',
+        'wp-cpt-ordering-admin-settings',
         $base . '/assets/style.css',
         [],
         $ver
@@ -21,7 +21,7 @@ add_action('admin_enqueue_scripts', function ($hook) {
 
     // IIFE bundle (no type="module")
     wp_register_script(
-        'plottos-admin-settings',
+        'wp-cpt-ordering-admin-settings',
         $base . '/assets/admin-settings.js',
         ['wp-api-fetch','wp-i18n'],
         $ver,
@@ -30,18 +30,18 @@ add_action('admin_enqueue_scripts', function ($hook) {
 
     // Boot data (must come BEFORE the script)
     wp_add_inline_script(
-        'plottos-admin-settings',
-        'window.PLOTTOS_SETTINGS_BOOT = ' . wp_json_encode([
-            'restUrl' => esc_url_raw(rest_url('plottos/v1')),
+        'wp-cpt-ordering-admin-settings',
+        'window.WP_CPT_ORDERING_SETTINGS_BOOT = ' . wp_json_encode([
+            'restUrl' => esc_url_raw(rest_url('wp-cpt-ordering/v1')),
             'nonce'   => wp_create_nonce('wp_rest'),
             'i18n'    => [
-                'saved' => __('Settings saved', 'plottos'),
-                'error' => __('Save failed', 'plottos'),
+                'saved' => __('Settings saved', 'wp-cpt-ordering'),
+                'error' => __('Save failed', 'wp-cpt-ordering'),
             ],
         ]) . ';',
         'before'
     );
 
-    wp_enqueue_script('plottos-admin-settings');
+    wp_enqueue_script('wp-cpt-ordering-admin-settings');
     
 });

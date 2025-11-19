@@ -3,12 +3,12 @@
  * AJAX handler for drag-and-drop reordering.
  * Processes AJAX requests to save post order.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 declare(strict_types=1);
 
-namespace PlottOs\Admin;
+namespace WpCptOrdering\Admin;
 
 /**
  * Handles AJAX requests for saving post order.

@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace PlottOs\Admin\Rest;
+namespace WpCptOrdering\Admin\Rest;
 
 use WP_REST_Request;
 use WP_REST_Response;
 
 final class Settings_Controller
 {
-    private const NS = 'plottos/v1';
+    private const NS = 'wp-cpt-ordering/v1';
     private const ROUTE = '/settings';
     private const OPTION = 'wp_cpt_ordering_options';
 

@@ -2,12 +2,12 @@
 /**
  * Admin area bootstrap.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 declare(strict_types=1);
 
-namespace PlottOs\Admin;
+namespace WpCptOrdering\Admin;
 
 /**
  * Initializes all admin-specific functionality.
@@ -27,25 +27,25 @@ class Bootstrap
         $capability = $options['capability'] ?? 'edit_others_posts';
 
         // Define security constants for nonce validation.
-        if (!\defined('PlottOs\\NONCE_ACTION')) {
-            \define('PlottOs\\NONCE_ACTION', 'wp_cpt_ordering_action');
-            \define('PlottOs\\NONCE_NAME', 'wp_cpt_ordering_nonce');
+        if (!\defined('WpCptOrdering\\NONCE_ACTION')) {
+            \define('WpCptOrdering\\NONCE_ACTION', 'wp_cpt_ordering_action');
+            \define('WpCptOrdering\\NONCE_NAME', 'wp_cpt_ordering_nonce');
         }
 
         // Load admin settings page (under Settings > Post Ordering).
-        if (\class_exists('\\PlottOs\\Admin\\Settings')) {
+        if (\class_exists('\\WpCptOrdering\\Admin\\Settings')) {
             $settings = new Settings($capability);
             $settings->init();
         }
 
         // Load drag-drop interface (under Tools > Reorder Posts).
-        if (\class_exists('\\PlottOs\\Admin\\DragDrop')) {
+        if (\class_exists('\\WpCptOrdering\\Admin\\DragDrop')) {
             $drag_drop = new DragDrop($capability);
             $drag_drop->init();
         }
 
         // Load AJAX handlers for saving order.
-        if (\class_exists('\\PlottOs\\Admin\\Ajax')) {
+        if (\class_exists('\\WpCptOrdering\\Admin\\Ajax')) {
             $ajax = new Ajax($capability);
             $ajax->init();
         }

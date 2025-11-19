@@ -1,12 +1,12 @@
 /* admin-src/settings/main.css */
-.plottos-card {
+.wp-cpt-ordering-card {
     background:#fff;
     border:1px solid #ddd;
     padding:16px;
     margin:16px 0;
 }
 
-.plottos-card-header {
+.wp-cpt-ordering-card-header {
     display: flex;
     gap: 10px;
     align-items: center;

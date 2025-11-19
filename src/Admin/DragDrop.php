@@ -3,12 +3,12 @@
  * Drag-and-drop reordering interface.
  * Integrates with native WordPress post list tables.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 declare(strict_types=1);
 
-namespace PlottOs\Admin;
+namespace WpCptOrdering\Admin;
 
 /**
  * Handles drag-and-drop reordering UI on post list tables.

@@ -14,7 +14,7 @@ const filteredTypes = computed(() =>
 );
 
 function apiFetch(path, options = {}) {
-  const { restUrl, nonce } = window.PLOTTOS_SETTINGS_BOOT;
+  const { restUrl, nonce } = window.WP_CPT_ORDERING_SETTINGS_BOOT;
   return window.wp.apiFetch({
     path: path.startsWith('/') ? path : `/${path}`,
     method: options.method || 'GET',
@@ -25,7 +25,7 @@ function apiFetch(path, options = {}) {
 
 onMounted(async () => {
   try {
-    const res = await apiFetch('plottos/v1/settings');
+    const res = await apiFetch('wp-cpt-ordering/v1/settings');
     postTypes.value = res?.postTypes ?? [];
     form.value      = res?.settings ?? form.value;
   } catch (e) {
@@ -59,15 +59,15 @@ function showNotice(message, type = 'success') {
 
 function createCustomToast(message, type) {
   // Remove any existing toasts
-  const existing = document.querySelector('.plottos-toast');
+  const existing = document.querySelector('.wp-cpt-ordering-toast');
   if (existing) existing.remove();
   
   // Create toast element
   const toast = document.createElement('div');
-  toast.className = `plottos-toast plottos-toast-${type}`;
+  toast.className = `wp-cpt-ordering-toast wp-cpt-ordering-toast-${type}`;
   toast.innerHTML = `
-    <span class="plottos-toast-icon">${type === 'success' ? '✓' : '✗'}</span>
-    <span class="plottos-toast-message">${message}</span>
+    <span class="wp-cpt-ordering-toast-icon">${type === 'success' ? '✓' : '✗'}</span>
+    <span class="wp-cpt-ordering-toast-message">${message}</span>
   `;
   
   // Style the toast
@@ -85,20 +85,20 @@ function createCustomToast(message, type) {
     alignItems: 'center',
     gap: '8px',
     fontSize: '14px',
-    animation: 'plottos-slide-in 0.3s ease-out',
+    animation: 'wp-cpt-ordering-slide-in 0.3s ease-out',
     maxWidth: '400px'
   });
   
   // Add animation keyframes if not already present
-  if (!document.querySelector('#plottos-toast-style')) {
+  if (!document.querySelector('#wp-cpt-ordering-toast-style')) {
     const style = document.createElement('style');
-    style.id = 'plottos-toast-style';
+    style.id = 'wp-cpt-ordering-toast-style';
     style.textContent = `
-      @keyframes plottos-slide-in {
+      @keyframes wp-cpt-ordering-slide-in {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
       }
-      @keyframes plottos-slide-out {
+      @keyframes wp-cpt-ordering-slide-out {
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
       }
@@ -111,7 +111,7 @@ function createCustomToast(message, type) {
   
   // Auto-remove after 3 seconds
   setTimeout(() => {
-    toast.style.animation = 'plottos-slide-out 0.3s ease-in';
+    toast.style.animation = 'wp-cpt-ordering-slide-out 0.3s ease-in';
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
@@ -119,13 +119,13 @@ function createCustomToast(message, type) {
 async function save() {
   saving.value = true;
   try {
-    const res = await apiFetch('plottos/v1/settings', { method: 'PUT', data: form.value });
+    const res = await apiFetch('wp-cpt-ordering/v1/settings', { method: 'PUT', data: form.value });
     form.value = res.settings;
     console.log('[PLOTTOS] Save successful:', res);
-    showNotice(window.PLOTTOS_SETTINGS_BOOT.i18n.saved, 'success');
+    showNotice(window.WP_CPT_ORDERING_SETTINGS_BOOT.i18n.saved, 'success');
   } catch (e) {
     console.error('[PLOTTOS] Save failed:', e);
-    showNotice(window.PLOTTOS_SETTINGS_BOOT.i18n.error, 'error');
+    showNotice(window.WP_CPT_ORDERING_SETTINGS_BOOT.i18n.error, 'error');
   } finally {
     setTimeout(() => saving.value = false, 200);
   }
@@ -140,9 +140,9 @@ function toggleType(slug) {
 
 <template>
   <div v-if="loading">Loading…</div>
-  <div v-else class="plottos-settings">
-    <div class="plottos-card">
-      <div class="plottos-card-header">
+  <div v-else class="wp-cpt-ordering-settings">
+    <div class="wp-cpt-ordering-card">
+      <div class="wp-cpt-ordering-card-header">
         <h2>Apply Ordering</h2>
       </div>
 
@@ -155,8 +155,8 @@ function toggleType(slug) {
       </div>
     </div>
 
-    <div class="plottos-card">
-      <div class="plottos-card-header">
+    <div class="wp-cpt-ordering-card">
+      <div class="wp-cpt-ordering-card-header">
         <h2>Enabled Post Types</h2>
         <input type="search" v-model="filter" placeholder="Filter post types…" />
       </div>

@@ -3,12 +3,12 @@
  * Plugin helper functions.
  * Utility functions used throughout the plugin.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 declare(strict_types=1);
 
-namespace PlottOs;
+namespace WpCptOrdering;
 
 /**
  * Get plugin basename.

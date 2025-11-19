@@ -3,12 +3,12 @@
  * Frontend query modifier.
  * Automatically applies menu_order to queries for enabled post types.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
 declare(strict_types=1);
 
-namespace PlottOs\Frontend;
+namespace WpCptOrdering\Frontend;
 
 /**
  * Modifies WP_Query to respect custom post ordering on frontend.
@@ -96,12 +96,12 @@ class QueryModifier
         $explicit_orderby = $query->get('orderby');
 
         // Allow developers to disable ordering for specific contexts
-        if (false === apply_filters('plottos_ordering_apply', true, $query)) {
+        if (false === apply_filters('wp_cpt_ordering_ordering_apply', true, $query)) {
             return;
         }
 
         // Allow developers to force menu_order even if an explicit orderby exists
-        $force_menu_order = apply_filters('plottos_force_menu_order', false, $query);
+        $force_menu_order = apply_filters('wp_cpt_ordering_force_menu_order', false, $query);
 
         // Respect explicit orderby if not forcing
         if (!empty($explicit_orderby) && !$force_menu_order) {

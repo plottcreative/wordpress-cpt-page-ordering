@@ -3,10 +3,10 @@
  * Settings page for WP CPT Ordering.
  * Allows users to select which post types to enable ordering for.
  *
- * @package PlottOs
+ * @package WpCptOrdering
  */
 
-namespace PlottOs\Admin;
+namespace WpCptOrdering\Admin;
 
 class Settings
 {
@@ -31,8 +31,8 @@ class Settings
      */
     public function addSettingsPage(): void {
         $hook = add_options_page(
-            __('Post Ordering', 'plottos'),
-            __('Post Ordering', 'plottos'),
+            __('Post Ordering', 'wp-cpt-ordering'),
+            __('Post Ordering', 'wp-cpt-ordering'),
             $this->capability,
             $this->page_slug, // 'wp-cpt-ordering'
             [$this, 'renderSettingsPage']
@@ -48,10 +48,10 @@ class Settings
         $base = plugins_url('', \PlottOs\FILE);
         $ver  = defined('PLOTTOS_VERSION') ? PLOTTOS_VERSION : time();
 
-        wp_enqueue_style('plottos-admin-settings', $base . '/assets/style.css', [], $ver);
+        wp_enqueue_style('wp-cpt-ordering-admin-settings', $base . '/assets/style.css', [], $ver);
 
         wp_register_script(
-            'plottos-admin-settings',
+            'wp-cpt-ordering-admin-settings',
             $base . '/assets/admin-settings.js',
             ['wp-api-fetch','wp-i18n'],
             $ver,
@@ -59,16 +59,16 @@ class Settings
         );
 
         wp_add_inline_script(
-            'plottos-admin-settings',
-            'window.PLOTTOS_SETTINGS_BOOT=' . wp_json_encode([
-                'restUrl' => esc_url_raw(rest_url('plottos/v1')),
+            'wp-cpt-ordering-admin-settings',
+            'window.WP_CPT_ORDERING_SETTINGS_BOOT=' . wp_json_encode([
+                'restUrl' => esc_url_raw(rest_url('wp-cpt-ordering/v1')),
                 'nonce'   => wp_create_nonce('wp_rest'),
-                'i18n'    => ['saved'=>__('Settings saved','plottos'),'error'=>__('Save failed','plottos')],
+                'i18n'    => ['saved'=>__('Settings saved','wp-cpt-ordering'),'error'=>__('Save failed','wp-cpt-ordering')],
             ]) . ';',
             'before'
         );
 
-        wp_enqueue_script('plottos-admin-settings');
+        wp_enqueue_script('wp-cpt-ordering-admin-settings');
     }
 
     /**
@@ -115,7 +115,7 @@ class Settings
         <div class="wrap">
             <h1><?php echo \esc_html(\get_admin_page_title()); ?></h1>
 
-            <div id="plottos-cpt-ordering-settings-root">
+            <div id="wp-cpt-ordering-settings-root">
                 <form action="options.php" method="post" class="plottos-settings-fallback">
                     <?php
                     \settings_fields($this->option_group);
