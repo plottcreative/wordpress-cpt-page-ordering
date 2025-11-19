@@ -32,7 +32,7 @@ onMounted(async () => {
     console.error('[PLOTTOS] GET failed:', e);
   } finally {
     loading.value = false;
-  }
+  } 
 });
 
 async function save() {
@@ -44,7 +44,7 @@ async function save() {
   } catch (e) {
     wp?.toast?.error?.(window.PLOTTOS_SETTINGS_BOOT.i18n.error);
   } finally {
-    saving.value = false;
+    setTimeout(() => saving.value = false, 100);
   }
 }
 
