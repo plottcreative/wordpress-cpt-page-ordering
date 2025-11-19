@@ -61,7 +61,9 @@ function toggleType(slug) {
   <div v-if="loading">Loading…</div>
   <div v-else class="plottos-settings">
     <div class="plottos-card">
-      <h2>Apply Ordering</h2>
+      <div class="plottos-card-header">
+        <h2>Apply Ordering</h2>
+      </div>
 
       <div class="pt-grid">
         <label><input type="checkbox" v-model="form.apply_on_archives"> Apply on archives</label>

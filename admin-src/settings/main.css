@@ -15,6 +15,10 @@
         margin-top: 0;
     }
 
+    :is(h2:has(+ input)) {
+        margin-bottom: 0;
+    }
+
     :is(input) {
         height: max-content;
     }
@@ -22,7 +26,7 @@
 
 .pt-grid {
     display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); 
+    grid-template-columns: 1fr;
     gap:8px;
     margin-top:8px;
 }
@@ -31,7 +35,7 @@
     background:#f8f8f8;
     padding:8px;
     border-radius:4px;
-    width: max-content;;
+    width: max-content;
 }
 
 .disabled {
