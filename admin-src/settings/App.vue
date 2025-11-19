@@ -40,11 +40,13 @@ async function save() {
   try {
     const res = await apiFetch('plottos/v1/settings', { method: 'PUT', data: form.value });
     form.value = res.settings;
+    console.log('[PLOTTOS] PUT:', res);
+    console.log(wp.toast.success);
     wp?.toast?.success?.(window.PLOTTOS_SETTINGS_BOOT.i18n.saved);
   } catch (e) {
     wp?.toast?.error?.(window.PLOTTOS_SETTINGS_BOOT.i18n.error);
   } finally {
-    setTimeout(() => saving.value = false, 100);
+    setTimeout(() => saving.value = false, 200);
   }
 }
 
@@ -60,16 +62,22 @@ function toggleType(slug) {
   <div v-else class="plottos-settings">
     <div class="plottos-card">
       <h2>Apply Ordering</h2>
-      <label><input type="checkbox" v-model="form.apply_on_archives"> Apply on archives</label>
-      <label class="ml-4" :class="{disabled: !form.apply_on_archives}">
-        <input type="checkbox" v-model="form.apply_on_search" :disabled="!form.apply_on_archives">
-        Include search results
-      </label>
+
+      <div class="pt-grid">
+        <label><input type="checkbox" v-model="form.apply_on_archives"> Apply on archives</label>
+        <label class="ml-4" :class="{disabled: !form.apply_on_archives}">
+          <input type="checkbox" v-model="form.apply_on_search" :disabled="!form.apply_on_archives">
+          Include search results
+        </label>
+      </div>
     </div>
 
     <div class="plottos-card">
-      <h2>Enabled Post Types</h2>
-      <input type="search" v-model="filter" placeholder="Filter post types…" />
+      <div class="plottos-card-header">
+        <h2>Enabled Post Types</h2>
+        <input type="search" v-model="filter" placeholder="Filter post types…" />
+      </div>
+
       <div class="pt-grid">
         <label v-for="pt in filteredTypes" :key="pt.slug" class="pt-item">
           <input type="checkbox"
