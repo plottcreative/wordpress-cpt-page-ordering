@@ -9,6 +9,15 @@
 .plottos-card-header {
     display: flex;
     gap: 10px;
+    align-items: center;
+
+    h2 {
+        margin-top: 0;
+    }
+
+    input {
+        height: max-content;
+    }
 }
 
 .pt-grid {
@@ -22,6 +31,7 @@
     background:#f8f8f8;
     padding:8px;
     border-radius:4px;
+    width: max-content;;
 }
 
 .disabled {
