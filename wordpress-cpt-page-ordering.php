@@ -65,7 +65,6 @@ add_action('plugins_loaded', static function (): void {
     }
 });
 
-
 add_action('rest_api_init', function () {
     $routes = rest_get_server()->get_routes();
     error_log( isset($routes['/plottos/v1/settings'])
