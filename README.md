@@ -18,6 +18,7 @@ Drag-and-drop reordering for WordPress posts, pages, and custom post types with 
 - **Security-First** - Nonce verification and capability checks
 - **Zero Configuration** - Works out of the box with posts and pages
 - **Modern Architecture** - PHP 8.0+, PSR-4 autoloading, strict types
+- **Minimal VUE** - Settings Configuration
 
 ---
 
@@ -32,6 +33,15 @@ Drag-and-drop reordering for WordPress posts, pages, and custom post types with 
 ## Installation
 
 ### Via Composer (Recommended)
+_Use the token provided by PLOTT. If you don't have one, request one [here](mailto:ewan@plott.co.uk)_
+```bash
+composer config --global --auth http-basic.plottcreative.repo.repman.io token REPLACE_WITH_TOKEN
+```
+
+
+```bash
+composer config repositories.plottcreative '{"type":"composer","url":"https://plottcreative.repo.repman.io"}'
+```
 
 ```bash
 composer require plottcreative/wordpress-cpt-page-ordering
