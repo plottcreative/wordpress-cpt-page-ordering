@@ -157,9 +157,9 @@ class DragDrop
         // Enqueue our custom drag-drop script
         \wp_enqueue_script(
             'wp-cpt-ordering-drag-drop',
-            \PlottOs\get_assets_url() . '/js/drag-drop.js',
+            \WpCptOrdering\get_assets_url() . '/js/drag-drop.js',
             ['sortablejs', 'jquery'],
-            \PlottOs\VERSION,
+            \WpCptOrdering\VERSION,
             true
         );
 
@@ -169,7 +169,7 @@ class DragDrop
             'wpCptOrdering',
             [
                 'ajaxUrl'  => \admin_url('admin-ajax.php'),
-                'nonce'    => \wp_create_nonce(\PlottOs\NONCE_ACTION),
+                'nonce'    => \wp_create_nonce(\WpCptOrdering\NONCE_ACTION),
                 'postType' => $post_type,
             ]
         );
@@ -177,9 +177,9 @@ class DragDrop
         // Enqueue our CSS
         \wp_enqueue_style(
             'wp-cpt-ordering-drag-drop',
-            \PlottOs\get_assets_url() . '/css/drag-drop.css',
+            \WpCptOrdering\get_assets_url() . '/css/drag-drop.css',
             [],
-            \PlottOs\VERSION
+            \WpCptOrdering\VERSION
         );
     }
 }

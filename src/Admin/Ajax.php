@@ -38,7 +38,7 @@ class Ajax
     public function handleSaveOrder(): void
     {
         // Verify nonce
-        if (!\check_ajax_referer(\PlottOs\NONCE_ACTION, 'nonce', false)) {
+        if (!\check_ajax_referer(\WpCptOrdering\NONCE_ACTION, 'nonce', false)) {
             \wp_send_json_error([
                 'message' => \__('Security check failed.', 'wp-cpt-ordering'),
             ], 403);

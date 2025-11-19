@@ -8,8 +8,8 @@ add_action('admin_enqueue_scripts', function ($hook) {
     }
 
     // Use your defined constants from the plugin bootstrap
-    $ver  = defined('\PlottOs\VERSION') ? \PlottOs\VERSION : time();
-    $base = plugins_url('', \PlottOs\FILE);
+    $ver  = defined('\WpCptOrdering\VERSION') ? \WpCptOrdering\VERSION : time();
+    $base = plugins_url('', \WpCptOrdering\FILE);
 
     // Vite output CSS
     wp_enqueue_style(

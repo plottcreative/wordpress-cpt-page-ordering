@@ -45,8 +45,8 @@ class Settings
     }
 
     public function enqueueVueAssets(): void {
-        $base = plugins_url('', \PlottOs\FILE);
-        $ver  = defined('PLOTTOS_VERSION') ? PLOTTOS_VERSION : time();
+        $base = plugins_url('', \WpCptOrdering\FILE);
+        $ver  = defined('WpCptOrdering\\VERSION') ? \WpCptOrdering\VERSION : time();
 
         wp_enqueue_style('wp-cpt-ordering-admin-settings', $base . '/assets/style.css', [], $ver);
 
@@ -116,7 +116,7 @@ class Settings
             <h1><?php echo \esc_html(\get_admin_page_title()); ?></h1>
 
             <div id="wp-cpt-ordering-settings-root">
-                <form action="options.php" method="post" class="plottos-settings-fallback">
+                <form action="options.php" method="post" class="wp-cpt-ordering-settings-fallback">
                     <?php
                     \settings_fields($this->option_group);
                     \do_settings_sections($this->page_slug);
