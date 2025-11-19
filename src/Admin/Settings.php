@@ -31,8 +31,8 @@ class Settings
      */
     public function addSettingsPage(): void {
         $hook = add_options_page(
-            __('Post Ordering', 'wp-cpt-ordering'),
-            __('Post Ordering', 'wp-cpt-ordering'),
+            __('WP CPT Ordering', 'wp-cpt-ordering'),
+            __('WP CPT Ordering', 'wp-cpt-ordering'),
             $this->capability,
             $this->page_slug, // 'wp-cpt-ordering'
             [$this, 'renderSettingsPage']
