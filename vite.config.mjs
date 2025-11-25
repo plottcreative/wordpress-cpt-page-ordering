@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-    'process.env': {}, // safe shim
+    'process.env': {},
   },
   build: {
     lib: {
@@ -14,10 +14,11 @@ export default defineConfig({
       formats: ['iife'],
       name: 'PlottosSettings',
       fileName: (_format, name) => `${name}.js`,
+      cssFileName: 'admin-settings',
     },
     outDir: 'assets',
     emptyOutDir: false,
     sourcemap: true,
     target: 'es2019',
-  },
+  }, 
 });

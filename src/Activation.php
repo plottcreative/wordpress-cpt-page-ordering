@@ -23,10 +23,10 @@ class Activation
     public static function activate(): void
     {
         // Verify minimum PHP version requirement.
-        if (version_compare(PHP_VERSION, '8.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.4', '<')) {
             \deactivate_plugins(get_basename());
             \wp_die(
-                \esc_html__('WP CPT Ordering requires PHP 8.0 or higher.', 'wp-cpt-ordering'),
+                \esc_html__('WP CPT Ordering requires PHP 7.4 or higher.', 'wp-cpt-ordering'),
                 \esc_html__('Plugin Activation Error', 'wp-cpt-ordering'),
                 ['back_link' => true]
             );

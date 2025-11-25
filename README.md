@@ -2,7 +2,7 @@
 
 Drag-and-drop reordering for WordPress posts, pages, and custom post types with persistent storage.
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue)
+![Version](https://img.shields.io/badge/version-0.4.2-blue)
 ![PHP](https://img.shields.io/badge/php-%3E%3D8.0-brightgreen)
 ![WordPress](https://img.shields.io/badge/wordpress-%3E%3D6.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-orange)
@@ -17,14 +17,14 @@ Drag-and-drop reordering for WordPress posts, pages, and custom post types with 
 - **Non-Intrusive** - Respects explicit `orderby` parameters
 - **Security-First** - Nonce verification and capability checks
 - **Zero Configuration** - Works out of the box with posts and pages
-- **Modern Architecture** - PHP 8.0+, PSR-4 autoloading, strict types
+- **Modern Architecture** - PHP 7.4+, PSR-4 autoloading, strict types
 - **Minimal VUE** - Settings Configuration
 
 ---
 
 ## Requirements
 
-- **PHP:** 8.0 or higher
+- **PHP:** 7.4 or higher
 - **WordPress:** 6.0 or higher
 - **User Role:** Editor or Administrator (for reordering)
 
@@ -461,7 +461,7 @@ Contributions are welcome! Please:
 
 ### Code Standards
 
-- PHP 8.0+ with strict types
+- PHP 7.4+ with strict types
 - PSR-4 autoloading
 - WordPress Coding Standards
 - PHPDoc blocks on all methods
