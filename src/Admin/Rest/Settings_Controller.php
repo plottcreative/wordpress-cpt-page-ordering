@@ -14,25 +14,24 @@ final class Settings_Controller
 
     public static function register(): void
     {
-        \add_action('rest_api_init', function () {
-            \register_rest_route(self::NS, self::ROUTE, [
-                [
-                    'methods'             => 'GET',
-                    'callback'            => [self::class, 'get_items'],
-                    'permission_callback' => [self::class, 'can_manage'],
+        \register_rest_route(self::NS, self::ROUTE, [
+            [
+                'methods'             => 'GET',
+                'callback'            => [self::class, 'get_items'],
+                'permission_callback' => [self::class, 'can_manage'],
+            ],
+            [
+                'methods'             => 'PUT',
+                'callback'            => [self::class, 'update_items'],
+                'permission_callback' => [self::class, 'can_manage'],
+                'args'                => [
+                    'apply_on_archives' => ['type' => 'boolean'],
+                    'apply_on_search'   => ['type' => 'boolean'],
+                    'enabled_types'     => ['type' => 'array', 'items' => ['type' => 'string']],
+                    'enabled_taxonomies' => ['type' => 'array', 'items' => ['type' => 'string']],
                 ],
-                [
-                    'methods'             => 'PUT',
-                    'callback'            => [self::class, 'update_items'],
-                    'permission_callback' => [self::class, 'can_manage'],
-                    'args'                => [
-                        'apply_on_archives' => ['type' => 'boolean'],
-                        'apply_on_search'   => ['type' => 'boolean'],
-                        'enabled_types'     => ['type' => 'array', 'items' => ['type' => 'string']],
-                    ],
-                ],
-            ]);
-        });
+            ],
+        ]);
     }
 
     public static function can_manage(): bool
@@ -48,6 +47,7 @@ final class Settings_Controller
             'apply_on_search'   => (bool)($opts['apply_on_search'] ?? false),
             // Map your stored key to what Vue expects
             'enabled_types'     => \array_values((array)($opts['enabled_post_types'] ?? ['page'])),
+            'enabled_taxonomies' => \array_values((array)($opts['enabled_taxonomies'] ?? [])),
         ];
 
         $pts = \get_post_types(['public' => true], 'objects');
@@ -56,17 +56,26 @@ final class Settings_Controller
             $pts
         ));
 
-        return new WP_REST_Response(['settings' => $normalized, 'postTypes' => $postTypes]);
+        // Get all public taxonomies
+        $taxes = \get_taxonomies(['public' => true], 'objects');
+        $taxonomies = \array_values(\array_map(
+            fn($o) => ['slug' => $o->name, 'label' => $o->labels->singular_name ?? $o->label],
+            $taxes
+        ));
+
+        return new WP_REST_Response(['settings' => $normalized, 'postTypes' => $postTypes, 'taxonomies' => $taxonomies]);
     }
 
     public static function update_items(WP_REST_Request $r): WP_REST_Response
     {
         // Write back using your *stored* option schema (enabled_post_types)
         $enabled = \array_values(\array_filter(\array_map('sanitize_key', (array)$r->get_param('enabled_types'))));
+        $enabled_taxonomies = \array_values(\array_filter(\array_map('sanitize_key', (array)$r->get_param('enabled_taxonomies'))));
         $payload = [
             'apply_on_archives'   => (bool)$r->get_param('apply_on_archives'),
             'apply_on_search'     => (bool)$r->get_param('apply_on_search'),
             'enabled_post_types'  => $enabled,
+            'enabled_taxonomies'  => $enabled_taxonomies,
         ];
 
         \update_option(self::OPTION, \array_merge(
@@ -74,13 +83,14 @@ final class Settings_Controller
             $payload
         ));
 
-        // Return Vue’s shape
+        // Return Vue's shape
         return new WP_REST_Response([
             'ok' => true,
             'settings' => [
                 'apply_on_archives' => $payload['apply_on_archives'],
                 'apply_on_search'   => $payload['apply_on_search'],
                 'enabled_types'     => $enabled,
+                'enabled_taxonomies' => $enabled_taxonomies,
             ],
         ]);
     }

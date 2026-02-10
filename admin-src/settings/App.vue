@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-const loading   = ref(true);
-const saving    = ref(false);
-const postTypes = ref([]);
-const form      = ref({ apply_on_archives: true, apply_on_search: false, enabled_types: [] });
-const filter    = ref('');
+const loading    = ref(true);
+const saving     = ref(false);
+const postTypes  = ref([]);
+const taxonomies = ref([]);
+const form       = ref({ apply_on_archives: true, apply_on_search: false, enabled_types: [], enabled_taxonomies: [] });
+const filter     = ref('');
 
 const filteredTypes = computed(() =>
   postTypes.value.filter(pt =>
@@ -27,6 +28,7 @@ onMounted(async () => {
   try {
     const res = await apiFetch('wp-cpt-ordering/v1/settings');
     postTypes.value = res?.postTypes ?? [];
+    taxonomies.value = res?.taxonomies ?? [];
     form.value      = res?.settings ?? form.value;
   } catch (e) {
     console.error('[PLOTTOS] GET failed:', e);
@@ -124,6 +126,12 @@ function toggleType(slug) {
   set.has(slug) ? set.delete(slug) : set.add(slug);
   form.value.enabled_types = Array.from(set);
 }
+
+function toggleTaxonomy(slug) {
+  const set = new Set(form.value.enabled_taxonomies);
+  set.has(slug) ? set.delete(slug) : set.add(slug);
+  form.value.enabled_taxonomies = Array.from(set);
+}
 </script>
 
 <template>
@@ -155,6 +163,21 @@ function toggleType(slug) {
             :checked="form.enabled_types.includes(pt.slug)"
             @change="toggleType(pt.slug)">
           <span>{{ pt.label }} <small>({{ pt.slug }})</small></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="wp-cpt-ordering-card">
+      <div class="wp-cpt-ordering-card-header">
+        <h2>Enabled Taxonomies</h2>
+      </div>
+
+      <div class="pt-grid">
+        <label v-for="tax in taxonomies" :key="tax.slug" class="pt-item">
+          <input type="checkbox"
+            :checked="form.enabled_taxonomies.includes(tax.slug)"
+            @change="toggleTaxonomy(tax.slug)">
+          <span>{{ tax.label }} <small>({{ tax.slug }})</small></span>
         </label>
       </div>
     </div>

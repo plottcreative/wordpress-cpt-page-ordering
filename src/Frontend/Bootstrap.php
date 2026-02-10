@@ -27,5 +27,11 @@ class Bootstrap
             $query_modifier = new QueryModifier();
             $query_modifier->init();
         }
+
+        // Load term order modifier to apply custom ordering to term queries.
+        if (\class_exists('\\WpCptOrdering\\Frontend\\TermOrderModifier')) {
+            $term_order_modifier = new TermOrderModifier();
+            $term_order_modifier->init();
+        }
     }
 }

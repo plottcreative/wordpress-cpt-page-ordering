@@ -1,10 +1,17 @@
 {
     "name": "plottcreative/wordpress-cpt-page-ordering",
-    "version": "0.5.1",
+    "version": "1.0.0",
     "description": "WordPress plugin that allows administrators to easily reorder posts, pages, and custom post types (CPTs) through a simple drag-and-drop interface in the WordPress admin area.",
     "type": "wordpress-plugin",
     "minimum-stability": "stable",
-    "keywords": ["wordpress", "plugin", "drag-and-drop", "ordering", "cpt", "menu_order"],
+    "keywords": [
+        "wordpress",
+        "plugin",
+        "drag-and-drop",
+        "ordering",
+        "cpt",
+        "menu_order"
+    ],
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -30,4 +37,4 @@
     "extra": {
         "installer-name": "wordpress-cpt-page-ordering"
     }
-}   
+}

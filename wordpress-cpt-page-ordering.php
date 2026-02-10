@@ -7,7 +7,7 @@ namespace WpCptOrdering;
 /**
  * Plugin Name:       WP CPT Ordering
  * Description:       Drag-and-drop reordering for posts, pages, and custom post types with persistent storage.
- * Version:           0.5.1
+ * Version:           1.0.0
  * Plugin URI:        https://github.com/plottcreative/wordpress-cpt-page-ordering
  * Author:            Ewan Lockwood
  * Author URI:        https://plott.co.uk
@@ -28,9 +28,14 @@ if (!defined('ABSPATH')) {
 /**
  * Plugin constants.
  */
-const VERSION = '0.5.1';
+const VERSION = '1.0.0';
 const FILE    = __FILE__;
 const DIR     = __DIR__;
+const NONCE_ACTION = 'wp_cpt_ordering_action';
+const NONCE_NAME = 'wp_cpt_ordering_nonce';
+const TERM_NONCE_ACTION = 'wp_cpt_ordering_term_action';
+const TERM_NONCE_NAME = 'wp_cpt_ordering_term_nonce';
+const TERM_META_KEY = '_menu_order';
 
 /**
  * Load Composer autoloader.
@@ -56,20 +61,17 @@ add_action('plugins_loaded', static function (): void {
         \WpCptOrdering\Admin\Bootstrap::init();
     }
 
-    // Frontend bootstrap (unchanged)
+    // Frontend bootstrap
     \WpCptOrdering\Frontend\Bootstrap::init();
+});
 
-    // REST routes must be registered regardless of is_admin()
+/**
+ * Register REST routes.
+ * Must be done in rest_api_init hook.
+ */
+add_action('rest_api_init', function (): void {
     if (class_exists(\WpCptOrdering\Admin\Rest\Settings_Controller::class)) {
         \WpCptOrdering\Admin\Rest\Settings_Controller::register();
     }
-});
-
-add_action('rest_api_init', function () {
-    $routes = rest_get_server()->get_routes();
-    error_log( isset($routes['/wp-cpt-ordering/v1/settings'])
-      ? '[WP-CPT-ORDERING] REST route PRESENT'
-      : '[WP-CPT-ORDERING] REST route MISSING'
-    );
 });
 
