@@ -70,7 +70,13 @@ final class Settings_Controller
     {
         // Write back using your *stored* option schema (enabled_post_types)
         $enabled = \array_values(\array_filter(\array_map('sanitize_key', (array)$r->get_param('enabled_types'))));
-        $enabled_taxonomies = \array_values(\array_filter(\array_map('sanitize_key', (array)$r->get_param('enabled_taxonomies'))));
+        
+        // Validate taxonomies against registered ones (preserves case)
+        $registered_taxonomies = \array_keys(\get_taxonomies(['public' => true]));
+        $enabled_taxonomies = \array_values(\array_filter(
+            (array)$r->get_param('enabled_taxonomies'),
+            fn($tax) => \in_array($tax, $registered_taxonomies, true)
+        ));
         $payload = [
             'apply_on_archives'   => (bool)$r->get_param('apply_on_archives'),
             'apply_on_search'     => (bool)$r->get_param('apply_on_search'),
