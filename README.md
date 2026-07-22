@@ -2,9 +2,9 @@
 
 Drag-and-drop reordering for WordPress posts, pages, and custom post types with persistent storage.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.2-blue)
 ![PHP](https://img.shields.io/badge/php-%3E%3D8.0-brightgreen)
-![WordPress](https://img.shields.io/badge/wordpress-%3E%3D6.0-blue)
+![WordPress](https://img.shields.io/badge/wordpress-%3E%3D7.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-orange)
 
 ---
@@ -24,8 +24,8 @@ Drag-and-drop reordering for WordPress posts, pages, and custom post types with 
 
 ## Requirements
 
-- **PHP:** 7.4 or higher
-- **WordPress:** 6.0 or higher
+- **PHP:** 8.0 or higher
+- **WordPress:** 7.0 or higher
 - **User Role:** Editor or Administrator (for reordering)
 
 ---

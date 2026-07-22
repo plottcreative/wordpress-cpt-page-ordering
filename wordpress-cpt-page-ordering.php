@@ -7,14 +7,14 @@ namespace WpCptOrdering;
 /**
  * Plugin Name:       WP CPT Ordering
  * Description:       Drag-and-drop reordering for posts, pages, and custom post types with persistent storage.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Plugin URI:        https://github.com/plottcreative/wordpress-cpt-page-ordering
  * Author:            Ewan Lockwood
  * Author URI:        https://plott.co.uk
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Requires at least: 6.0
- * Requires PHP:      7.4
+ * Requires at least: 7.0
+ * Requires PHP:      8.0
  * Text Domain:       wp-cpt-ordering
  *
  * @package WpCptOrdering
@@ -28,7 +28,7 @@ if (!defined('ABSPATH')) {
 /**
  * Plugin constants.
  */
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const FILE    = __FILE__;
 const DIR     = __DIR__;
 const NONCE_ACTION = 'wp_cpt_ordering_action';
