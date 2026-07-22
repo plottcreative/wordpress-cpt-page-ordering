@@ -2,7 +2,7 @@
 
 Drag-and-drop reordering for WordPress posts, pages, and custom post types with persistent storage.
 
-![Version](https://img.shields.io/badge/version-1.0.2-blue)
+![Version](https://img.shields.io/badge/version-1.1.1-blue)
 ![PHP](https://img.shields.io/badge/php-%3E%3D8.0-brightgreen)
 ![WordPress](https://img.shields.io/badge/wordpress-%3E%3D7.0-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-orange)
